@@ -34,8 +34,30 @@ const randomizeGroup = (group) =>
 	return group;
 }
 
-const promo = ["Alexis", "Riyad", "Kévin", "Julie", "Emilie", "Olga", "Nadjib", "Jean", "Mickael", "Lisa", "Myriam", "Mathilde", "Cédric", "Estefania", "Baptiste", "Christophe", "Audrey", "Chloé", "Guillaume", "Majdeddine", "Déborrah"];
+const promo = [
+	{ name: "Alexis", genre: "male" },
+	{ name: "Kévin", genre: "male" },
+	{ name: "Mickael", genre: "male" },
+	{ name: "Guillaume", genre: "male" },
+	{ name: "Christophe", genre: "male" },
+	{ name: "Majdeddine", genre: "male" },
+	{ name: "Riyad", genre: "male" },
+	{ name: "Nadjib", genre: "male" },
+	{ name: "Jean", genre: "male" },
+	{ name: "Baptiste", genre: "male" },
+	{ name: "Cédric", genre: "male" },
+	{ name: "Olga", genre: "female" },
+	{ name: "Estefania", genre: "female" },
+	{ name: "Julie", genre: "female" },
+	{ name: "Myriam", genre: "female" },
+	{ name: "Audrey", genre: "female" },
+	{ name: "Emilie", genre: "female" },
+	{ name: "Chloé", genre: "female" },
+	{ name: "Lisa", genre: "female" },
+	{ name: "Déborrah", genre: "female" },
+	{ name: "Mathilde", genre: "female" }
+]
 const randomPromo = randomizeGroup(promo);
-const splitPromo = splitGroupBy(randomPromo, 4);
+const splitPromo = splitGroupBy(randomPromo, Math.floor((Math.random() * 8) + 1));
 const finalPromo = mergeGroupNotFull(splitPromo);
-console.log(finalPromo);
+console.table(finalPromo);
