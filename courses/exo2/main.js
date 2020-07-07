@@ -1,3 +1,7 @@
+/**
+ * Merge groups that aren't full to a previous group.
+ * @param {*} groups - Array containing objects.
+ */
 const mergeGroupNotFull = (groups) =>
 {
 	for (let i = 0; i < groups.length; i++)
@@ -11,6 +15,11 @@ const mergeGroupNotFull = (groups) =>
 	return groups.filter(i => i);
 }
 
+/**
+ * Split an array by the specified amount.
+ * @param {*} group - Array.
+ * @param {*} number - Split groups by this amount.
+ */
 const splitGroupBy = (group, number) =>
 {
 	let newGroups = [];
@@ -24,6 +33,10 @@ const splitGroupBy = (group, number) =>
 	return newGroups;
 }
 
+/**
+ * Shuffle the array.
+ * @param {*} group - Array.
+ */
 const randomizeGroup = (group) =>
 {
 	for (let i = group.length - 1; i > 0; i--) 
@@ -32,6 +45,53 @@ const randomizeGroup = (group) =>
 		[group[i], group[rnd]] = [group[rnd], group[i]];
 	}
 	return group;
+}
+
+/**
+ * Parse the array of objects to return a flat array from a specific key/value.
+ * @param {*} groups - Array containing objects.
+ * @param {*} key - The key to test.
+ * @param {*} value - The value to test.
+ */
+const mapKeyValue = (groups, key, value) =>
+{
+	let flatArray = [];
+	for (let i = 0; i < groups.length; i++)
+	{
+		for (let j = 0; j < groups[i].length; j++)
+		{
+			if (groups[i][j][key] === value)
+				flatArray.push(groups[i][j]);
+		}
+	}
+	return flatArray;
+}
+
+/**
+ * Sort the array of objects by the key genre
+ * @param {*} groups - Array containing objects.
+ */
+const sortByGenre = (groups) =>
+{
+	let newGroups = [];
+	let personCount = 0;
+	
+	const male = mapKeyValue(groups, "genre", "male");
+	const female = mapKeyValue(groups, "genre", "female");
+
+	for (let i = 0; i < groups.length; i++)
+	{
+		newGroups[i] = [];
+		for (let j = 0; j < groups[i].length; j++)
+		{
+			if (personCount % 2 == true || personCount % 2 == false && female.length <= 0)
+				newGroups[i][j] = male.pop();
+			else if (female.length > 0)
+				newGroups[i][j] = female.pop();
+			personCount++;
+		}
+	}
+	return newGroups;
 }
 
 const promo = [
@@ -56,8 +116,11 @@ const promo = [
 	{ name: "Lisa", genre: "female" },
 	{ name: "Déborrah", genre: "female" },
 	{ name: "Mathilde", genre: "female" }
-]
+];
+
+let randomSplitSize = false ? Math.floor((Math.random() * 8) + 2) : 4;
 const randomPromo = randomizeGroup(promo);
-const splitPromo = splitGroupBy(randomPromo, Math.floor((Math.random() * 8) + 1));
+const splitPromo = splitGroupBy(randomPromo, randomSplitSize);
 const finalPromo = mergeGroupNotFull(splitPromo);
-console.table(finalPromo);
+const genreSortedPromo = sortByGenre(finalPromo);
+console.table(genreSortedPromo);
