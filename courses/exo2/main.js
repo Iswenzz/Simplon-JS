@@ -1,3 +1,4 @@
+// Initialize code editor
 let editor = ace.edit("editor");
 editor.setTheme("ace/theme/dracula");
 editor.session.setMode("ace/mode/json");
@@ -41,7 +42,7 @@ const splitGroupBy = (group, number) =>
  * Shuffle the array.
  * @param {*} group - Array.
  */
-const randomizeGroup = (group) =>
+const shuffleArray = (group) =>
 {
 	for (let i = group.length - 1; i > 0; i--) 
 	{
@@ -98,6 +99,7 @@ const sortByGenre = (groups) =>
 	return newGroups;
 }
 
+// Default promo JSON
 const promo = [
 	{ "name": "Alexis", "genre": "male" },
 	{ "name": "Kévin", "genre": "male" },
@@ -122,48 +124,56 @@ const promo = [
 	{ "name": "Mathilde", "genre": "female" }
 ];
 
+/**
+ * Randomize team members and group by a specific value, and can be sorted by genre.
+ */
+const randomizeTeam = () =>
+{
+	let randomSplitSize = !$("#form-team-split").val() ? Math.floor((Math.random() * 8) + 2)
+		: parseInt($("#form-team-split").val(), 10);
+
+	const group = JSON.parse(editor.getValue());
+	const randomPromo = shuffleArray(group);
+	const splitPromo = splitGroupBy(randomPromo, randomSplitSize);
+	let finalPromo = mergeGroupNotFull(splitPromo);
+	if ($("#team-genre-sorted").is(":checked"))
+		finalPromo = sortByGenre(finalPromo);
+
+	// Clear previous childrens
+	$("#team-members").empty();
+	for (let i = 0; i < finalPromo.length; i++)
+	{
+		// Create a team div
+		let team = $(`<div>Team ${String.fromCharCode(97 + i).toUpperCase()}</div>`);
+		team.addClass("team py-2 d-flex flex-column align-items-center justify-content-center text-white shadow");
+
+		// Add all persons in the team div
+		for (let j = 0; j < finalPromo[i].length; j++)
+		{
+			let person = $("<div></div>");
+			person.addClass("team-person d-flex justify-content-between align-items-center");
+
+			let name = $(`<p>${finalPromo[i][j].name}</p>`);
+			name.addClass("text-white h-100 p-3");
+			person.append(name);
+
+			let genre = $(`<span>${finalPromo[i][j].genre[0].toUpperCase()}</span>`);
+			genre.addClass("team-genre text-white text-center h-100 p-2");
+			genre.css("background-color", finalPromo[i][j].genre === "male" ? "slateblue" : "magenta");
+			person.append(genre);
+
+			team.append(person);
+		}
+		$("#team-members").append(team);
+	}
+}
+
 $(window).on("load", () =>
 {
 	// Team randomizer button
-	$("#team-randomize").on("click", () =>
-	{
-		let randomSplitSize = !$("#form-team-split").val() ? Math.floor((Math.random() * 8) + 2)
-			: parseInt($("#form-team-split").val(), 10);
-
-		const group = JSON.parse(editor.getValue());
-		const randomPromo = randomizeGroup(group);
-		const splitPromo = splitGroupBy(randomPromo, randomSplitSize);
-		let finalPromo = mergeGroupNotFull(splitPromo);
-		if ($("#team-genre-sorted").is(":checked"))
-			finalPromo = sortByGenre(finalPromo);
-
-		// Clear previous childrens
-		$("#team-members").empty();
-		for (let i = 0; i < finalPromo.length; i++)
-		{
-			// Create a team div
-			let team = $(`<div>Team ${String.fromCharCode(97 + i).toUpperCase()}</div>`);
-			team.addClass("team py-2 d-flex flex-column align-items-center justify-content-center text-white shadow");
-
-			// Add all persons in the team div
-			for (let j = 0; j < finalPromo[i].length; j++)
-			{
-				let person = $("<div></div>");
-				person.addClass("team-person d-flex justify-content-between align-items-center");
-
-				let name = $(`<p>${finalPromo[i][j].name}</p>`);
-				name.addClass("text-white h-100 p-3");
-				person.append(name);
-
-				let genre = $(`<span>${finalPromo[i][j].genre[0].toUpperCase()}</span>`);
-				genre.addClass("team-genre text-white text-center h-100 p-2");
-				genre.css("background-color", finalPromo[i][j].genre === "male" ? "slateblue" : "magenta");
-				person.append(genre);
-
-				team.append(person);
-			}
-			$("#team-members").append(team);
-		}
-	});
+	$("#team-randomize").on("click", () => randomizeTeam());
+	// Editor default value
 	editor.setValue(JSON.stringify(promo, null, '\t'), -1);
+	// Randomize on page load
+	randomizeTeam();
 });
