@@ -127,7 +127,8 @@ $(window).on("load", () =>
 	// Team randomizer button
 	$("#team-randomize").on("click", () =>
 	{
-		let randomSplitSize = false ? Math.floor((Math.random() * 8) + 2) : 4;
+		let randomSplitSize = !$("#form-team-split").val() ? Math.floor((Math.random() * 8) + 2)
+			: parseInt($("#form-team-split").val(), 10);
 
 		const group = JSON.parse(editor.getValue());
 		const randomPromo = randomizeGroup(group);
