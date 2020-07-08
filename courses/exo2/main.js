@@ -1,4 +1,58 @@
 // Initialize code editor
+let parseMode = {
+	json: {
+		content: [
+			{ "name": "Alexis", "genre": "male" },
+			{ "name": "Kévin", "genre": "male" },
+			{ "name": "Mickael", "genre": "male" },
+			{ "name": "Guillaume", "genre": "male" },
+			{ "name": "Christophe", "genre": "male" },
+			{ "name": "Majdeddine", "genre": "male" },
+			{ "name": "Riyad", "genre": "male" },
+			{ "name": "Nadjib", "genre": "male" },
+			{ "name": "Jean", "genre": "male" },
+			{ "name": "Baptiste", "genre": "male" },
+			{ "name": "Cédric", "genre": "male" },
+			{ "name": "Olga", "genre": "female" },
+			{ "name": "Estefania", "genre": "female" },
+			{ "name": "Julie", "genre": "female" },
+			{ "name": "Myriam", "genre": "female" },
+			{ "name": "Audrey", "genre": "female" },
+			{ "name": "Emilie", "genre": "female" },
+			{ "name": "Chloé", "genre": "female" },
+			{ "name": "Lisa", "genre": "female" },
+			{ "name": "Déborrah", "genre": "female" },
+			{ "name": "Mathilde", "genre": "female" }
+		],
+		active: true
+	},
+	csv: {
+		content: [
+			"Alexis,male",
+			"Kévin,male",
+			"Mickael,male",
+			"Guillaume,male",
+			"Christophe,male",
+			"Majdeddine,male",
+			"Riyad,male",
+			"Nadjib,male",
+			"Jean,male",
+			"Baptiste,male",
+			"Cédric,male",
+			"Olga,female",
+			"Estefania,female",
+			"Julie,female",
+			"Myriam,female",
+			"Audrey,female",
+			"Emilie,female",
+			"Chloé,female",
+			"Lisa,female",
+			"Déborrah,female",
+			"Mathilde,female"
+		],
+		active: false
+	}
+};
 let editor = ace.edit("editor");
 editor.setTheme("ace/theme/dracula");
 editor.session.setMode("ace/mode/json");
@@ -99,40 +153,35 @@ const sortByGenre = (groups) =>
 	return newGroups;
 }
 
-// Default promo JSON
-const promo = [
-	{ "name": "Alexis", "genre": "male" },
-	{ "name": "Kévin", "genre": "male" },
-	{ "name": "Mickael", "genre": "male" },
-	{ "name": "Guillaume", "genre": "male" },
-	{ "name": "Christophe", "genre": "male" },
-	{ "name": "Majdeddine", "genre": "male" },
-	{ "name": "Riyad", "genre": "male" },
-	{ "name": "Nadjib", "genre": "male" },
-	{ "name": "Jean", "genre": "male" },
-	{ "name": "Baptiste", "genre": "male" },
-	{ "name": "Cédric", "genre": "male" },
-	{ "name": "Olga", "genre": "female" },
-	{ "name": "Estefania", "genre": "female" },
-	{ "name": "Julie", "genre": "female" },
-	{ "name": "Myriam", "genre": "female" },
-	{ "name": "Audrey", "genre": "female" },
-	{ "name": "Emilie", "genre": "female" },
-	{ "name": "Chloé", "genre": "female" },
-	{ "name": "Lisa", "genre": "female" },
-	{ "name": "Déborrah", "genre": "female" },
-	{ "name": "Mathilde", "genre": "female" }
-];
+/**
+ * Parse the CSV editor output back to a useable JSON.
+ * @param {*} group - CSV group array.
+ */
+const parseTeamCSV = (group) =>
+{
+	let newGroup = [];
+
+	for (let i = 0; i < group.length; i++)
+	{
+		let tkn = group[i].split(",");
+		newGroup.push({
+			name: tkn[0],
+			genre: tkn[1]
+		});
+	}
+	return newGroup;
+}
 
 /**
  * Randomize team members and group by a specific value, and can be sorted by genre.
  */
 const randomizeTeam = () =>
 {
-	let randomSplitSize = !$("#form-team-split").val() ? Math.floor((Math.random() * 8) + 2)
+	const randomSplitSize = !($("#form-team-split").val()) ? Math.floor((Math.random() * 8) + 2)
 		: parseInt($("#form-team-split").val(), 10);
+	const group = parseMode["json"].active 
+		? JSON.parse(editor.getValue()) : parseTeamCSV(editor.getValue().split("\n"));
 
-	const group = JSON.parse(editor.getValue());
 	const randomPromo = shuffleArray(group);
 	const splitPromo = splitGroupBy(randomPromo, randomSplitSize);
 	let finalPromo = mergeGroupNotFull(splitPromo);
@@ -170,10 +219,29 @@ const randomizeTeam = () =>
 
 $(window).on("load", () =>
 {
-	// Team randomizer button
+	// Page events
 	$("#team-randomize").on("click", () => randomizeTeam());
+	$("#editor-json").on("click", () => 
+	{
+		if (parseMode["csv"].active)
+		{
+			[parseMode["csv"].active, parseMode["json"].active] = [parseMode["json"].active, parseMode["csv"].active];
+			parseMode["csv"].content = editor.getValue().split("\n");
+			editor.setValue(JSON.stringify(parseMode["json"].content, null, '\t'), -1);
+		}
+	});
+	$("#editor-csv").on("click", () => 
+	{
+		if (parseMode["json"].active)
+		{
+			[parseMode["json"].active, parseMode["csv"].active] = [parseMode["csv"].active, parseMode["json"].active];
+			parseMode["json"].content = JSON.parse(editor.getValue());
+			editor.setValue(parseMode["csv"].content.join("\n"), -1);
+		}
+	});
+
 	// Editor default value
-	editor.setValue(JSON.stringify(promo, null, '\t'), -1);
+	editor.setValue(JSON.stringify(parseMode["json"].content, null, '\t'), -1);
 	// Randomize on page load
 	randomizeTeam();
 });
