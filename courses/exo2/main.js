@@ -1,3 +1,7 @@
+let editor = ace.edit("editor");
+editor.setTheme("ace/theme/dracula");
+editor.session.setMode("ace/mode/json");
+
 /**
  * Merge groups that aren't full to a previous group.
  * @param {*} groups - Array containing objects.
@@ -95,32 +99,70 @@ const sortByGenre = (groups) =>
 }
 
 const promo = [
-	{ name: "Alexis", genre: "male" },
-	{ name: "Kévin", genre: "male" },
-	{ name: "Mickael", genre: "male" },
-	{ name: "Guillaume", genre: "male" },
-	{ name: "Christophe", genre: "male" },
-	{ name: "Majdeddine", genre: "male" },
-	{ name: "Riyad", genre: "male" },
-	{ name: "Nadjib", genre: "male" },
-	{ name: "Jean", genre: "male" },
-	{ name: "Baptiste", genre: "male" },
-	{ name: "Cédric", genre: "male" },
-	{ name: "Olga", genre: "female" },
-	{ name: "Estefania", genre: "female" },
-	{ name: "Julie", genre: "female" },
-	{ name: "Myriam", genre: "female" },
-	{ name: "Audrey", genre: "female" },
-	{ name: "Emilie", genre: "female" },
-	{ name: "Chloé", genre: "female" },
-	{ name: "Lisa", genre: "female" },
-	{ name: "Déborrah", genre: "female" },
-	{ name: "Mathilde", genre: "female" }
+	{ "name": "Alexis", "genre": "male" },
+	{ "name": "Kévin", "genre": "male" },
+	{ "name": "Mickael", "genre": "male" },
+	{ "name": "Guillaume", "genre": "male" },
+	{ "name": "Christophe", "genre": "male" },
+	{ "name": "Majdeddine", "genre": "male" },
+	{ "name": "Riyad", "genre": "male" },
+	{ "name": "Nadjib", "genre": "male" },
+	{ "name": "Jean", "genre": "male" },
+	{ "name": "Baptiste", "genre": "male" },
+	{ "name": "Cédric", "genre": "male" },
+	{ "name": "Olga", "genre": "female" },
+	{ "name": "Estefania", "genre": "female" },
+	{ "name": "Julie", "genre": "female" },
+	{ "name": "Myriam", "genre": "female" },
+	{ "name": "Audrey", "genre": "female" },
+	{ "name": "Emilie", "genre": "female" },
+	{ "name": "Chloé", "genre": "female" },
+	{ "name": "Lisa", "genre": "female" },
+	{ "name": "Déborrah", "genre": "female" },
+	{ "name": "Mathilde", "genre": "female" }
 ];
 
-let randomSplitSize = false ? Math.floor((Math.random() * 8) + 2) : 4;
-const randomPromo = randomizeGroup(promo);
-const splitPromo = splitGroupBy(randomPromo, randomSplitSize);
-const finalPromo = mergeGroupNotFull(splitPromo);
-const genreSortedPromo = sortByGenre(finalPromo);
-console.table(genreSortedPromo);
+$(window).on("load", () =>
+{
+	// Team randomizer button
+	$("#team-randomize").on("click", () =>
+	{
+		let randomSplitSize = false ? Math.floor((Math.random() * 8) + 2) : 4;
+
+		const group = JSON.parse(editor.getValue());
+		const randomPromo = randomizeGroup(group);
+		const splitPromo = splitGroupBy(randomPromo, randomSplitSize);
+		let finalPromo = mergeGroupNotFull(splitPromo);
+		if ($("#team-genre-sorted").is(":checked"))
+			finalPromo = sortByGenre(finalPromo);
+
+		// Clear previous childrens
+		$("#team-members").empty();
+		for (let i = 0; i < finalPromo.length; i++)
+		{
+			// Create a team div
+			let team = $(`<div>Team ${String.fromCharCode(97 + i).toUpperCase()}</div>`);
+			team.addClass("team py-2 d-flex flex-column align-items-center justify-content-center text-white shadow");
+
+			// Add all persons in the team div
+			for (let j = 0; j < finalPromo[i].length; j++)
+			{
+				let person = $("<div></div>");
+				person.addClass("team-person d-flex justify-content-between align-items-center");
+
+				let name = $(`<p>${finalPromo[i][j].name}</p>`);
+				name.addClass("text-white h-100 p-3");
+				person.append(name);
+
+				let genre = $(`<span>${finalPromo[i][j].genre[0].toUpperCase()}</span>`);
+				genre.addClass("team-genre text-white text-center h-100 p-2");
+				genre.css("background-color", finalPromo[i][j].genre === "male" ? "slateblue" : "magenta");
+				person.append(genre);
+
+				team.append(person);
+			}
+			$("#team-members").append(team);
+		}
+	});
+	editor.setValue(JSON.stringify(promo, null, '\t'), -1);
+});
