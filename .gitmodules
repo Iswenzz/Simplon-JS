@@ -1,0 +1,3 @@
+[submodule "courses/tp1"]
+	path = courses/tp1
+	url = https://github.com/Iswenzz/Simplon-Tamagotchi.git
