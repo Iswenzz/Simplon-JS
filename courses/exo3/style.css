@@ -1,0 +1,30 @@
+body {
+	background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(37,0,62,1) 100%);
+}
+
+.container {
+	background-color: rgb(40, 40, 40);
+}
+
+.picks {
+	margin: 3em;
+	padding: 2em;
+	background-color: rgb(50, 50, 50);
+	color: gainsboro;
+}
+
+.game {
+	margin: 3em;
+	padding: 2em;
+	width: 100%;
+	background-color: rgb(60, 60, 60);
+	color: gainsboro;
+}
+
+#usr-won {
+	color: cyan;
+}
+
+#ai-won {
+	color: yellow;
+}
