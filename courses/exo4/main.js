@@ -21,7 +21,7 @@ const onSoundboardKeyDown = (e) =>
 	if (keyIndex !== -1)
 	{
 		const key = $("#soundboard").find("li").eq(keyIndex);
-		key.trigger("click");
+		key.click();
 		key.addClass("soundKeyDown");
 	}
 }
@@ -43,9 +43,9 @@ const onSoundboardKeyUp = (e) =>
  */
 const playSoundboardKey = (index) =>
 {
-	let key = $(`#audio-${Object.values(board)[index]}`);
-	key.get()[0].currentTime = 0;
-	key.trigger("play");
+	let key = $(`#audio-${Object.values(board)[index]}`).get()[0];
+	key.currentTime = 0;
+	key.play();
 }
 
 $(window).on("load", () =>
