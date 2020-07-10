@@ -37,16 +37,24 @@ const onSoundboardKeyUp = (e) =>
 		$("#soundboard").find("li").eq(keyIndex).removeClass("soundKeyDown");
 }
 
+/**
+ * Play a sound.
+ * @param {*} index - Key index.
+ */
+const playSoundboardKey = (index) =>
+{
+	let key = $(`#audio-${Object.values(board)[index]}`);
+	key.get()[0].currentTime = 0;
+	key.trigger("play");
+}
+
 $(window).on("load", () =>
 {
-	/**
-	 * Soundboard click/play sound event.
-	 */
 	$("#soundboard").each(function()
 	{
 		$(this).find("li").each(function(index)
 		{
-			$(this).on("click", () => $(`#audio-${Object.values(board)[index]}`).trigger("play"));
+			$(this).on("click", () => playSoundboardKey(index));
 		});
 	});
 });
