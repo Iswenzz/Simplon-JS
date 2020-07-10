@@ -17,9 +17,13 @@ const board = {
 const onSoundboardKeyDown = (e) =>
 {
 	const keyIndex = Object.keys(board).indexOf(e.keyCode.toString());
-	const key = $("#soundboard").find("li").eq(keyIndex);
-	key.trigger("click");
-	key.addClass("soundKeyDown");
+
+	if (keyIndex !== -1)
+	{
+		const key = $("#soundboard").find("li").eq(keyIndex);
+		key.trigger("click");
+		key.addClass("soundKeyDown");
+	}
 }
 
 /**
@@ -29,7 +33,8 @@ const onSoundboardKeyDown = (e) =>
 const onSoundboardKeyUp = (e) =>
 {
 	const keyIndex = Object.keys(board).indexOf(e.keyCode.toString());
-	$("#soundboard").find("li").eq(keyIndex).removeClass("soundKeyDown");
+	if (keyIndex !== -1)
+		$("#soundboard").find("li").eq(keyIndex).removeClass("soundKeyDown");
 }
 
 $(window).on("load", () =>
