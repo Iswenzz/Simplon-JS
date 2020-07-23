@@ -1,3 +1,6 @@
 [submodule "courses/tp1"]
 	path = courses/tp1
 	url = https://github.com/Iswenzz/Simplon-Tamagotchi.git
+[submodule "courses/tp2"]
+	path = courses/tp2
+	url = https://github.com/Iswenzz/Simplon-AlloCineClone.git
