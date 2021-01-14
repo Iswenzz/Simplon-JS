@@ -10,3 +10,6 @@
 [submodule "courses/tp4"]
 	path = courses/tp4
 	url = https://github.com/Iswenzz/Simplon-AION-Tribute.git
+[submodule "courses/tp5"]
+	path = courses/tp5
+	url = https://github.com/Iswenzz/Simplon-Meteo.git
