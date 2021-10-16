@@ -1,12 +1,12 @@
-[submodule "courses/tp1"]
-	path = courses/tp1
+[submodule "courses/tp1-tamagotchi"]
+	path = courses/tp1-tamagotchi
 	url = git@github.com:Iswenzz/Simplon-Tamagotchi.git
-[submodule "courses/tp2"]
-	path = courses/tp2
+[submodule "courses/tp2-allocineclone"]
+	path = courses/tp2-allocineclone
 	url = git@github.com:Iswenzz/Simplon-AlloCineClone.git
-[submodule "courses/tp3"]
-	path = courses/tp3
+[submodule "courses/tp3-metromobility"]
+	path = courses/tp3-metromobility
 	url = git@github.com:Iswenzz/Simplon-Metromobility.git
-[submodule "courses/tp4"]
-	path = courses/tp4
+[submodule "courses/tp4-aiontribute"]
+	path = courses/tp4-aiontribute
 	url = git@github.com:Iswenzz/Simplon-AION-Tribute.git
